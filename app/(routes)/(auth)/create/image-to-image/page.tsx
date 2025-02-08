@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { Loader, Upload } from "lucide-react";
+import Image from 'next/image';
 
 export default function ImageToImagePage() {
   const [sourceImage, setSourceImage] = useState<string | null>(null);
@@ -54,9 +55,11 @@ export default function ImageToImagePage() {
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
             {sourceImage ? (
-              <img
+              <Image
                 src={sourceImage}
-                alt="Source"
+                alt="Source image"
+                width={800}
+                height={800}
                 className="w-full h-full object-cover rounded-lg"
               />
             ) : (
@@ -99,9 +102,11 @@ export default function ImageToImagePage() {
       {/* Output Column */}
       <div className="flex items-center justify-center min-h-[400px] rounded-lg border bg-card p-4">
         {outputImage ? (
-          <img
+          <Image
             src={outputImage}
-            alt="Generated"
+            alt="Generated image"
+            width={800}
+            height={800}
             className="max-w-full max-h-full object-contain rounded-lg"
           />
         ) : (

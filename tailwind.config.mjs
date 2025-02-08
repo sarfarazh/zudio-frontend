@@ -1,11 +1,12 @@
-import type { Config } from "tailwindcss";
+import tailwindAnimate from "tailwindcss-animate";
 
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+export default {
   darkMode: "class",
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     container: {
@@ -73,9 +74,6 @@ const config: Config = {
     },
   },
   plugins: [
-    require("tailwindcss-animate"),
-    require("tailwind-scrollbar")({ nocompatible: true }),
+    tailwindAnimate,
   ],
 };
-
-export default config;

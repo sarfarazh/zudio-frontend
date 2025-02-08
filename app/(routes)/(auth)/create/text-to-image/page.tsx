@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Loader } from "lucide-react";
+import Image from 'next/image';
 
 export default function TextToImagePage() {
   const [prompt, setPrompt] = useState("");
@@ -60,9 +61,11 @@ export default function TextToImagePage() {
       {/* Output Column */}
       <div className="flex items-center justify-center min-h-[400px] rounded-lg border bg-card p-4">
         {image ? (
-          <img
+          <Image
             src={image}
             alt="Generated"
+            width={800}
+            height={800}
             className="max-w-full max-h-full object-contain rounded-lg"
           />
         ) : (

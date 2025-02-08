@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Image, Film, Music } from "lucide-react";
+import { Image as ImageIcon, Film, Music } from "lucide-react";
+import Image from 'next/image';
 
 const mockData = {
   images: Array(6).fill({
@@ -23,16 +23,14 @@ const mockData = {
 };
 
 export default function LibraryPage() {
-  const [activeTab, setActiveTab] = useState("images");
-
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-3xl font-bold mb-8">Media Library</h1>
       
-      <Tabs defaultValue="images" className="w-full">
-        <TabsList className="mb-8">
+      <Tabs defaultValue="images" className="space-y-6">
+        <TabsList>
           <TabsTrigger value="images" className="flex items-center gap-2">
-            <Image className="h-4 w-4" />
+            <ImageIcon className="h-4 w-4" />
             Images
           </TabsTrigger>
           <TabsTrigger value="videos" className="flex items-center gap-2">
@@ -52,9 +50,11 @@ export default function LibraryPage() {
                 key={index}
                 className="rounded-lg border bg-card overflow-hidden"
               >
-                <img
+                <Image
                   src={item.url}
                   alt={item.title}
+                  width={400}
+                  height={400}
                   className="w-full aspect-square object-cover"
                 />
                 <div className="p-4">

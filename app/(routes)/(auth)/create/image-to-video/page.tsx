@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { Loader, Upload, Play } from "lucide-react";
+import Image from 'next/image';
 
 export default function ImageToVideoPage() {
   const [sourceImage, setSourceImage] = useState<string | null>(null);
@@ -55,9 +56,11 @@ export default function ImageToVideoPage() {
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
             {sourceImage ? (
-              <img
+              <Image
                 src={sourceImage}
-                alt="Source"
+                alt="Source image"
+                width={800}
+                height={800}
                 className="w-full h-full object-cover rounded-lg"
               />
             ) : (

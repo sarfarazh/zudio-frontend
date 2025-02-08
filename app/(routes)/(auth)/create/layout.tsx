@@ -2,70 +2,21 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useKeyboardNavigation } from "@/hooks/use-keyboard-navigation";
 
 const steps = [
-  {
-    title: "Write Prompt",
-    href: "/create/write-prompt",
-    description: "Write and enhance your prompt",
-    shortcut: "1",
-  },
-  {
-    title: "Text to Image",
-    href: "/create/text-to-image",
-    description: "Generate images from text descriptions",
-    shortcut: "2",
-  },
-  {
-    title: "Image to Image",
-    href: "/create/image-to-image",
-    description: "Transform existing images",
-    shortcut: "3",
-  },
-  {
-    title: "Image to Video",
-    href: "/create/image-to-video",
-    description: "Create videos from still images",
-    shortcut: "4",
-  },
-  {
-    title: "Extend Video",
-    href: "/create/extend-video",
-    description: "Extend and enhance videos",
-    shortcut: "5",
-  },
-  {
-    title: "Video to Audio",
-    href: "/create/video-to-audio",
-    description: "Generate audio for your videos",
-    shortcut: "6",
-  },
-  {
-    title: "Add Dialogue",
-    href: "/create/add-dialogue",
-    description: "Add AI-generated dialogue to your video",
-    shortcut: "7",
-  },
-  {
-    title: "Add Music",
-    href: "/create/add-music",
-    description: "Add AI-generated background music",
-    shortcut: "8",
-  },
-  {
-    title: "Preview",
-    href: "/create/preview",
-    description: "Preview your complete video",
-    shortcut: "9",
-  },
-  {
-    title: "Render",
-    href: "/create/render",
-    description: "Render your final video",
-    shortcut: "0",
-  },
+  { href: "/create/write-prompt", title: "Write Prompt", description: "Describe your vision" },
+  { href: "/create/text-to-image", title: "Generate Image", description: "Create base image" },
+  { href: "/create/image-to-image", title: "Refine Image", description: "Modify image" },
+  { href: "/create/image-to-video", title: "Animate", description: "Create animation" },
+  { href: "/create/extend-video", title: "Extend Video", description: "Add duration" },
+  { href: "/create/video-to-audio", title: "Extract Audio", description: "Process audio" },
+  { href: "/create/add-dialogue", title: "Add Dialogue", description: "Voice generation" },
+  { href: "/create/add-music", title: "Add Music", description: "Background music" },
+  { href: "/create/preview", title: "Preview", description: "Review creation" },
+  { href: "/create/render", title: "Render", description: "Final export" }
 ];
 
 export default function CreateLayout({
@@ -74,38 +25,103 @@ export default function CreateLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const normalizedPathname = pathname.replace(/^\/(routes\/)?(\(auth\)\/)?/, '/');
+  console.log('Normalized pathname:', normalizedPathname);
   useKeyboardNavigation();
 
+  const currentStepIndex = steps.findIndex(step => step.href === normalizedPathname);
+  console.log('Current step index:', currentStepIndex);
+  const previousStep = steps[currentStepIndex - 1];
+  const nextStep = steps[currentStepIndex + 1];
+
   return (
-    <>
-      <div className="w-full border-b">
-        <div className="flex space-x-2 overflow-x-auto pb-2 px-4 scrollbar-thin scrollbar-thumb-gray-400 dark:scrollbar-thumb-gray-700 scrollbar-track-transparent">
-          {steps.map((step, index) => (
-            <Link
-              key={step.href}
-              href={step.href}
-              className={cn(
-                "flex flex-col min-w-[140px] p-2 rounded-lg border transition-colors group relative",
-                pathname === step.href
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-card text-card-foreground hover:bg-accent"
-              )}
-            >
-              <span className="text-xs font-medium mb-0.5">Step {index + 1}</span>
-              <span className="text-xs font-semibold">{step.title}</span>
-              <span className="text-[10px] mt-0.5 opacity-80">
-                {step.description}
-              </span>
-              <kbd className="absolute top-1.5 right-1.5 px-1 py-0.5 text-[10px] font-mono rounded bg-muted-foreground/10">
-                {step.shortcut}
-              </kbd>
+    <div className="flex flex-col min-h-[calc(100vh-65px)]">
+      {/* Breadcrumb Navigation */}
+      <div className="border-b bg-card">
+        <div className="container py-4">
+          <div className="flex items-center text-sm">
+            <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">
+              Dashboard
             </Link>
-          ))}
+            <ChevronRight className="h-4 w-4 mx-2 text-muted-foreground" />
+            <nav aria-label="Creation steps" className="flex items-center gap-2">
+              {steps.slice(0, currentStepIndex + 1).map((step, index) => (
+                <div key={step.href} className="flex items-center">
+                  {index > 0 && <ChevronRight className="h-4 w-4 mx-2 text-muted-foreground" />}
+                  <Link
+                    href={step.href}
+                    aria-current={normalizedPathname === step.href ? "step" : undefined}
+                    className={cn(
+                      "hover:text-foreground transition-colors flex items-center gap-2",
+                      normalizedPathname === step.href
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    <span className="w-5 h-5 flex items-center justify-center text-xs border rounded-full">
+                      {index + 1}
+                    </span>
+                    {step.title}
+                  </Link>
+                </div>
+              ))}
+            </nav>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="mt-4 h-1 bg-muted rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-primary transition-all duration-300 ease-in-out"
+              style={{ 
+                width: `${((currentStepIndex + 1) / steps.length) * 100}%` 
+              }}
+            />
+          </div>
         </div>
       </div>
-      <div className="container mx-auto py-4">
-        <div className="step-transition">{children}</div>
+
+      {/* Main Content */}
+      <div className="flex-1 container py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Previous Output */}
+          {previousStep && (
+            <div className="lg:col-span-3">
+              <div className="rounded-lg border bg-card p-4">
+                <h3 className="text-sm font-medium mb-2">Previous: {previousStep.title}</h3>
+                <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
+                  {/* Previous output preview */}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Current Step */}
+          <div className={cn(
+            "lg:col-span-6",
+            !previousStep && !nextStep ? "lg:col-start-4" : "",
+            !previousStep ? "lg:col-start-1" : "",
+            !nextStep ? "lg:col-end-13" : ""
+          )}>
+            {children}
+          </div>
+
+          {/* Next Step Preview */}
+          {nextStep && (
+            <div className="lg:col-span-3">
+              <div className="rounded-lg border bg-card p-4">
+                <h3 className="text-sm font-medium mb-2">Next: {nextStep.title}</h3>
+                <p className="text-sm text-muted-foreground mb-4">{nextStep.description}</p>
+                <Link
+                  href={nextStep.href}
+                  className="block w-full py-2 text-center text-sm bg-primary text-primary-foreground rounded-md hover:opacity-90"
+                >
+                  Continue to {nextStep.title}
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 } 
