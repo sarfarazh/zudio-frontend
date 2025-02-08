@@ -5,59 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth-store'
 
-const steps = [
-  {
-    title: "Write Prompt",
-    href: "/create/write-prompt",
-    description: "Start by writing a prompt to describe what you want to create."
-  },
-  {
-    title: "Text to Image",
-    href: "/create/text-to-image",
-    description: "Generate an initial image from your text prompt."
-  },
-  {
-    title: "Image to Image",
-    href: "/create/image-to-image",
-    description: "Refine and modify your generated image."
-  },
-  {
-    title: "Image to Video",
-    href: "/create/image-to-video",
-    description: "Transform your still image into a video."
-  },
-  {
-    title: "Extend Video",
-    href: "/create/extend-video",
-    description: "Extend your video's duration and add transitions."
-  },
-  {
-    title: "Video to Audio",
-    href: "/create/video-to-audio",
-    description: "Extract and enhance audio from your video."
-  },
-  {
-    title: "Add Dialogue",
-    href: "/create/add-dialogue",
-    description: "Add AI-generated voice and dialogue."
-  },
-  {
-    title: "Add Music",
-    href: "/create/add-music",
-    description: "Add background music and sound effects."
-  },
-  {
-    title: "Preview",
-    href: "/create/preview",
-    description: "Preview your complete creation."
-  },
-  {
-    title: "Render",
-    href: "/create/render",
-    description: "Render and export your final creation."
-  }
-]
-
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
