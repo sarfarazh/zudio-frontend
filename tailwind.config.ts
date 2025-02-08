@@ -5,7 +5,14 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}", // Include a components folder if needed
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        gray: {
+          950: '#0a0a0a',
+        },
+      },
+    },
   },
   plugins: [],
+  darkMode: 'class', // Enable dark mode
 };

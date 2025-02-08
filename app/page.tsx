@@ -9,8 +9,27 @@ export default function Home() {
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [jobStatus, setJobStatus] = useState<string | null>(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
 
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (loading || jobStatus === "PENDING") {
+      timer = setInterval(() => {
+        setElapsedTime((prev) => prev + 1);
+      }, 1000);
+    } else {
+      setElapsedTime(0);
+    }
+    return () => clearInterval(timer);
+  }, [loading, jobStatus]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -55,7 +74,7 @@ export default function Home() {
         setJobStatus(data.status);
 
         if (data.status === "COMPLETED" && data.image_path) {
-          setImage(`${backendUrl}/${data.image_path}`);
+          setImage(`${backendUrl}/output/${data.image_path.split('/').pop()}`);
           clearInterval(interval);
         }
       } catch (error) {
@@ -68,37 +87,67 @@ export default function Home() {
   }, [jobId]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4">
-      <h1 className="text-3xl font-bold">Text-to-Image Generator</h1>
-      <div className="mt-4">
-        <input
-          type="text"
-          placeholder="Enter your prompt..."
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          className="border p-2 rounded-md"
-        />
-        <button
-          onClick={handleGenerate}
-          disabled={loading}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-        >
-          {loading ? <Loader className="animate-spin" /> : "Generate"}
-        </button>
+    <main className="h-screen bg-gray-950 text-gray-100 p-4 md:p-8">
+      <div className="h-full max-w-7xl mx-auto flex flex-col">
+        <h1 className="text-3xl font-bold text-center mb-6">Text-to-Image Generator</h1>
+        
+        <div className="flex-1 grid md:grid-cols-2 gap-8 min-h-0">
+          {/* Left Column - Input Controls */}
+          <div className="flex flex-col space-y-4 min-h-0">
+            <div className="flex-1 flex flex-col space-y-4 min-h-0">
+              <textarea
+                placeholder="Enter your prompt..."
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                className="flex-1 p-3 rounded-lg bg-gray-800 border border-gray-700 
+                          focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                          resize-none"
+              />
+              <button
+                onClick={handleGenerate}
+                disabled={loading}
+                className="py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg
+                         disabled:opacity-50 disabled:cursor-not-allowed
+                         transition-colors duration-200"
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <Loader className="animate-spin" />
+                    <span>Generating... ({formatTime(elapsedTime)})</span>
+                  </div>
+                ) : (
+                  "Generate"
+                )}
+              </button>
+            </div>
+
+            {jobId && (
+              <div className="p-4 rounded-lg bg-gray-800">
+                <p className="text-gray-300">Job ID: {jobId}</p>
+                <p className="text-gray-300">Status: {jobStatus}</p>
+                {(loading || jobStatus === "PENDING") && (
+                  <p className="text-gray-300">Time elapsed: {formatTime(elapsedTime)}</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Right Column - Image Display */}
+          <div className="flex items-center justify-center min-h-0">
+            {image ? (
+              <img 
+                src={image} 
+                alt="Generated" 
+                className="rounded-lg shadow-xl max-w-full max-h-full object-contain"
+              />
+            ) : (
+              <div className="w-full aspect-square rounded-lg bg-gray-800 flex items-center justify-center">
+                <p className="text-gray-400">Generated image will appear here</p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-
-      {jobId && (
-        <div className="mt-4 text-center">
-          <p className="text-gray-700">Job ID: {jobId}</p>
-          <p className="text-gray-700">Status: {jobStatus}</p>
-        </div>
-      )}
-
-      {image && (
-        <div className="mt-4">
-          <img src={image} alt="Generated" className="rounded-lg shadow-md" />
-        </div>
-      )}
     </main>
   );
 }
