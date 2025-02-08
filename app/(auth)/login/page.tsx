@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth-store'
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const message = searchParams.get('message')
@@ -34,11 +34,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4">
-      <div className="mx-auto w-full max-w-sm space-y-6">
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4 bg-black">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black" />
+      <div className="relative mx-auto w-full max-w-sm space-y-6">
         <div className="flex flex-col space-y-2 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-2xl font-semibold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Welcome back</h1>
+          <p className="text-sm text-gray-400">
             Enter your email to sign in to your account
           </p>
         </div>
@@ -56,7 +57,7 @@ export default function LoginPage() {
             type="email"
             autoComplete="email"
             required
-            className="block w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-sm placeholder:text-gray-500 dark:border-gray-800 dark:bg-gray-950"
+            className="block w-full rounded-xl border border-gray-800 bg-gray-900/50 backdrop-blur-sm px-4 py-2 text-sm text-white placeholder:text-gray-600 focus:border-gray-700 focus:ring-1 focus:ring-gray-700 transition-all"
             placeholder="name@example.com"
           />
           <input
@@ -65,7 +66,7 @@ export default function LoginPage() {
             type="password"
             autoComplete="current-password"
             required
-            className="block w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-sm placeholder:text-gray-500 dark:border-gray-800 dark:bg-gray-950"
+            className="block w-full rounded-xl border border-gray-800 bg-gray-900/50 backdrop-blur-sm px-4 py-2 text-sm text-white placeholder:text-gray-600 focus:border-gray-700 focus:ring-1 focus:ring-gray-700 transition-all"
             placeholder="Password"
           />
 
@@ -78,24 +79,32 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="inline-flex w-full items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
+            className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50"
           >
             {isLoading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <div className="flex flex-col gap-2 text-center text-sm">
-          <Link href="/forgot-password" className="underline">
+        <div className="flex flex-col gap-2 text-center text-sm text-gray-400">
+          <Link href="/forgot-password" className="hover:text-gray-300 transition-colors">
             Forgot password?
           </Link>
           <div>
             Don&apos;t have an account?{' '}
-            <Link href="/sign-up" className="underline">
+            <Link href="/sign-up" className="hover:text-gray-300 transition-colors">
               Sign up
             </Link>
           </div>
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   )
 } 
