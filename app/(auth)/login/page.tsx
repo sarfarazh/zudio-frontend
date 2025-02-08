@@ -34,79 +34,75 @@ function LoginForm() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <div className="lg:col-span-6 lg:col-start-4">
-        <div className="flex min-h-[calc(100vh-65px)] items-center justify-center">
-          <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-            <div className="flex flex-col space-y-2 text-center">
-              <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
-              <p className="text-sm text-muted-foreground">
-                Enter your email to sign in to your account
-              </p>
+    <div className="flex min-h-full flex-col justify-center">
+      <div className="mx-auto w-full max-w-sm space-y-6">
+        <div className="flex flex-col space-y-2 text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+          <p className="text-sm text-muted-foreground">
+            Enter your email to sign in to your account
+          </p>
+        </div>
+
+        {message && (
+          <div className="text-sm text-green-500 text-center">
+            {message}
+          </div>
+        )}
+
+        <form className="space-y-4" onSubmit={onSubmit}>
+          <div>
+            <label htmlFor="email" className="sr-only">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              className="block w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-sm placeholder:text-gray-500 dark:border-gray-800 dark:bg-gray-950"
+              placeholder="name@example.com"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="sr-only">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              className="block w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-sm placeholder:text-gray-500 dark:border-gray-800 dark:bg-gray-950"
+              placeholder="Password"
+            />
+          </div>
+
+          {error && (
+            <div className="text-sm text-red-500">
+              {error}
             </div>
+          )}
 
-            {message && (
-              <div className="text-sm text-green-500 text-center">
-                {message}
-              </div>
-            )}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="inline-flex w-full items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
+          >
+            {isLoading ? 'Signing in...' : 'Sign in'}
+          </button>
+        </form>
 
-            <form className="space-y-4" onSubmit={onSubmit}>
-              <div>
-                <label htmlFor="email" className="sr-only">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="block w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-sm placeholder:text-gray-500 dark:border-gray-800 dark:bg-gray-950"
-                  placeholder="name@example.com"
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="sr-only">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="block w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-sm placeholder:text-gray-500 dark:border-gray-800 dark:bg-gray-950"
-                  placeholder="Password"
-                />
-              </div>
-
-              {error && (
-                <div className="text-sm text-red-500">
-                  {error}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="inline-flex w-full items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800 disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
-              >
-                {isLoading ? 'Signing in...' : 'Sign in'}
-              </button>
-            </form>
-
-            <div className="flex flex-col gap-2 text-center text-sm">
-              <Link href="/forgot-password" className="underline">
-                Forgot password?
-              </Link>
-              <div>
-                Don&apos;t have an account?{' '}
-                <Link href="/sign-up" className="underline">
-                  Sign up
-                </Link>
-              </div>
-            </div>
+        <div className="flex flex-col gap-2 text-center text-sm">
+          <Link href="/forgot-password" className="underline">
+            Forgot password?
+          </Link>
+          <div>
+            Don&apos;t have an account?{' '}
+            <Link href="/sign-up" className="underline">
+              Sign up
+            </Link>
           </div>
         </div>
       </div>
@@ -129,7 +125,7 @@ export default function LoginPage() {
         </div>
 
         {/* Login Form */}
-        <div className="lg:col-span-6">
+        <div className="lg:col-span-6 flex items-center justify-center py-8">
           <LoginForm />
         </div>
 
