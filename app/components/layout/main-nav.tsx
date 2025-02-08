@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./theme-toggle";
-import { PowerIcon, LogIn } from "lucide-react";
+import { PowerIcon, UserCircle2, User2 } from "lucide-react";
 import { useAuthStore } from "@/store/auth-store";
 
 const routes = [
@@ -50,7 +50,7 @@ export function MainNav() {
     <div className="border-b">
       <div className="flex h-16 items-center px-4">
         <div className="mr-8 font-semibold text-xl">
-          <Link href="/">Zudio</Link>
+          <Link href="/">ZenStudio</Link>
         </div>
 
         <div className="flex items-center space-x-4 lg:space-x-6">
@@ -77,21 +77,30 @@ export function MainNav() {
             <ThemeToggle />
           </div>
           {user ? (
-            <button
-              onClick={handleSignOut}
-              disabled={isLoading}
-              className="h-9 w-9 flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground disabled:opacity-50"
-              title="Sign out"
-            >
-              <PowerIcon className="h-4 w-4" />
-            </button>
+            <>
+              <Link
+                href="/profile"
+                className="h-9 w-9 flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
+                title="Profile"
+              >
+                <User2 className="h-4 w-4" />
+              </Link>
+              <button
+                onClick={handleSignOut}
+                disabled={isLoading}
+                className="h-9 w-9 flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground disabled:opacity-50"
+                title="Sign out"
+              >
+                <PowerIcon className="h-4 w-4" />
+              </button>
+            </>
           ) : (
             <Link
               href="/login"
-              className="h-9 w-9 flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
-              title="Sign in"
+              className="h-9 px-4 flex items-center justify-center gap-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground"
             >
-              <LogIn className="h-4 w-4" />
+              <UserCircle2 className="h-4 w-4" />
+              <span className="text-sm font-medium">Sign in</span>
             </Link>
           )}
         </div>

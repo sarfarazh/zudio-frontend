@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Zudio - AI Media Generation",
-  description: "Create amazing AI-generated media with Zudio",
+  title: "ZenStudio - AI Media Generation",
+  description: "Create amazing AI-generated media with ZenStudio",
 };
 
 export default function RootLayout({

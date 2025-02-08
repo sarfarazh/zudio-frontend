@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuthStore } from '@/store/auth-store'
 
-function LoginForm() {
+export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const message = searchParams.get('message')
@@ -24,7 +24,7 @@ function LoginForm() {
 
     try {
       await signIn(email, password)
-      router.push('/')
+      router.push('/dashboard')
       router.refresh()
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Invalid credentials')
@@ -34,7 +34,7 @@ function LoginForm() {
   }
 
   return (
-    <div className="flex min-h-full flex-col justify-center">
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4">
       <div className="mx-auto w-full max-w-sm space-y-6">
         <div className="flex flex-col space-y-2 text-center">
           <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
@@ -50,34 +50,24 @@ function LoginForm() {
         )}
 
         <form className="space-y-4" onSubmit={onSubmit}>
-          <div>
-            <label htmlFor="email" className="sr-only">
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              className="block w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-sm placeholder:text-gray-500 dark:border-gray-800 dark:bg-gray-950"
-              placeholder="name@example.com"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="sr-only">
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              className="block w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-sm placeholder:text-gray-500 dark:border-gray-800 dark:bg-gray-950"
-              placeholder="Password"
-            />
-          </div>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            className="block w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-sm placeholder:text-gray-500 dark:border-gray-800 dark:bg-gray-950"
+            placeholder="name@example.com"
+          />
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            required
+            className="block w-full rounded-md border border-gray-200 bg-white px-4 py-2 text-sm placeholder:text-gray-500 dark:border-gray-800 dark:bg-gray-950"
+            placeholder="Password"
+          />
 
           {error && (
             <div className="text-sm text-red-500">
@@ -107,42 +97,5 @@ function LoginForm() {
         </div>
       </div>
     </div>
-  )
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Previous Step */}
-        <div className="lg:col-span-3">
-          <div className="rounded-lg border bg-card p-4">
-            <h3 className="text-sm font-medium mb-2">Previous: Write Prompt</h3>
-            <div className="aspect-video bg-muted rounded-md flex items-center justify-center">
-              {/* Previous output preview */}
-            </div>
-          </div>
-        </div>
-
-        {/* Login Form */}
-        <div className="lg:col-span-6 flex items-center justify-center py-8">
-          <LoginForm />
-        </div>
-
-        {/* Next Step */}
-        <div className="lg:col-span-3">
-          <div className="rounded-lg border bg-card p-4">
-            <h3 className="text-sm font-medium mb-2">Next: Text to Image</h3>
-            <p className="text-sm text-muted-foreground mb-4">Generate an image from your text prompt.</p>
-            <Link
-              href="/create/text-to-image"
-              className="block w-full py-2 text-center text-sm bg-primary text-primary-foreground rounded-md hover:opacity-90"
-            >
-              Continue to Text to Image
-            </Link>
-          </div>
-        </div>
-      </div>
-    </Suspense>
   )
 } 
