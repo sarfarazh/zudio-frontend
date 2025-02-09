@@ -38,7 +38,7 @@ export default function CreateLayout({
     <div className="flex flex-col min-h-[calc(100vh-65px)]">
       {/* Breadcrumb Navigation */}
       <div className="border-b bg-card">
-        <div className="container py-4">
+        <div className="px-6 py-4">
           <div className="flex items-center text-sm">
             <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">
               Dashboard
@@ -81,7 +81,7 @@ export default function CreateLayout({
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 container py-6">
+      <div className="flex-1 px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Previous Output */}
           {previousStep && (

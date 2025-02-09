@@ -28,14 +28,14 @@ export function useKeyboardNavigation() {
       const currentIndex = steps.indexOf(pathname);
       if (currentIndex === -1) return;
 
-      // Left arrow or 'A' key for previous step
-      if ((e.key === "ArrowLeft" || e.key.toLowerCase() === "a") && currentIndex > 0) {
+      // Left arrow for previous step
+      if (e.key === "ArrowLeft" && currentIndex > 0) {
         e.preventDefault();
         router.push(steps[currentIndex - 1]);
       }
       
-      // Right arrow or 'D' key for next step
-      if ((e.key === "ArrowRight" || e.key.toLowerCase() === "d") && currentIndex < steps.length - 1) {
+      // Right arrow for next step
+      if (e.key === "ArrowRight" && currentIndex < steps.length - 1) {
         e.preventDefault();
         router.push(steps[currentIndex + 1]);
       }

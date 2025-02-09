@@ -5,22 +5,46 @@ import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Loader, Wand2 } from 'lucide-react'
 import Link from 'next/link'
+import { generatePrompt } from '@/services/prompt'
+import { PromptRequest } from '@/types/prompt'
+import { toast } from 'sonner'
 
 export default function HomePage() {
   const router = useRouter()
-  const [prompt, setPrompt] = useState('')
-  const [enhancedPrompt, setEnhancedPrompt] = useState('')
   const [loading, setLoading] = useState(false)
+  const [promptData, setPromptData] = useState<PromptRequest>({
+    seed: Math.floor(Math.random() * 2147483647).toString(),
+    custom: "",
+    artform: "disabled",
+    photo_type: "disabled",
+    lighting: "disabled",
+    composition: "disabled",
+    background: "disabled",
+  })
+  const [generatedPrompt, setGeneratedPrompt] = useState({
+    raw: "",
+    enhanced: "",
+    seed: "",
+  })
 
   const handleEnhance = async () => {
-    if (!prompt.trim()) return
+    if (!promptData.custom?.trim()) {
+      toast.error("Please enter a prompt")
+      return
+    }
     
     setLoading(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      setEnhancedPrompt(prompt + " [Enhanced with additional details and style modifiers]")
+      const response = await generatePrompt(promptData)
+      setGeneratedPrompt({
+        raw: response.raw_prompt,
+        enhanced: response.enhanced_prompt,
+        seed: response.seed,
+      })
+      toast.success("Prompt enhanced successfully!")
     } catch (error) {
       console.error("Error enhancing prompt:", error)
+      toast.error("Failed to enhance prompt. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -56,8 +80,8 @@ export default function HomePage() {
             <form onSubmit={handlePromptSubmit} className="space-y-4">
               <div className="space-y-4">
                 <textarea
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
+                  value={promptData.custom}
+                  onChange={(e) => setPromptData(prev => ({ ...prev, custom: e.target.value }))}
                   placeholder="Describe what you want to create..."
                   className="w-full rounded-xl border border-gray-800 bg-gray-900/50 backdrop-blur-sm px-4 py-3 text-lg placeholder:text-gray-600 text-white focus:border-gray-700 focus:ring-1 focus:ring-gray-700 transition-all"
                   rows={3}
@@ -65,22 +89,27 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={handleEnhance}
-                  disabled={!prompt.trim() || loading}
+                  disabled={loading || !promptData.custom?.trim()}
                   className="flex items-center justify-center gap-2 px-4 py-2 text-sm rounded-lg bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 backdrop-blur-sm transition-all disabled:opacity-50"
                 >
                   {loading ? (
-                    <Loader className="h-4 w-4 animate-spin" />
+                    <>
+                      <Loader className="h-4 w-4 animate-spin" />
+                      Enhancing...
+                    </>
                   ) : (
-                    <Wand2 className="h-4 w-4" />
+                    <>
+                      <Wand2 className="h-4 w-4" />
+                      Enhance Prompt
+                    </>
                   )}
-                  Enhance Prompt
                 </button>
               </div>
 
-              {enhancedPrompt && (
+              {generatedPrompt.enhanced && (
                 <div className="rounded-xl border border-gray-800 bg-gray-900/30 backdrop-blur-sm p-4 text-left">
                   <h3 className="text-sm font-medium mb-2 text-gray-400">Enhanced Prompt:</h3>
-                  <p className="text-sm text-gray-300 whitespace-pre-wrap">{enhancedPrompt}</p>
+                  <p className="text-sm text-gray-300 whitespace-pre-wrap">{generatedPrompt.enhanced}</p>
                 </div>
               )}
 
